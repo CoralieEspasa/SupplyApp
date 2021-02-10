@@ -1,0 +1,128 @@
+﻿@model Supplier
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card m-2">
+                <div class="card-header" style="background-color:darkblue">
+                    <h5 class="pt-2 pb-2" style="color:aliceblue">@Model.Name</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><h6 class="pt-2 pb-2" style="color:darkblue">SIRET Number :</h6> @Model.SIRET </li>
+                    <li class="list-group-item"><h6 class="pt-2 pb-2" style="color:darkblue"> Main Address :</h6> @Model.Address, @Model.PostalCode, @Model.Location, @Model.Country  </li>
+                </ul>
+            </div>
+            <div class="card m-2">
+                <div class="card-header" style="background-color:aliceblue">
+                    <h5 class="pt-2 pb-2" style="color:darkblue">Scoring</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-center">
+                        <h6 class="pt-2 pb-2" style="color:darkblue">Quality Note :</h6>
+                        @if (Model.QualityNote >= 8)
+                        {
+                            <h6 class="pt-2 pb-2" style="color:green"> @Model.QualityNote / 10 </h6>
+                        }
+                        @if (Model.QualityNote < 8)
+                        {
+                            <h6 class="pt-2 pb-2" style="color:orange"> @Model.QualityNote / 10 </h6>
+                        }
+                        @if (Model.QualityNote < 6)
+                        {
+                            <h6 class="pt-2 pb-2" style="color:red">@Model.QualityNote / 10 </h6>
+                        }
+                    </li>
+                    <li class="list-group-item text-center">
+                        <h6 class="pt-2 pb-2" style="color:darkblue"> Logistic Note :</h6> @if (Model.LogisticNote >= 8)
+                        {
+                            <h6 class="pt-2 pb-2" style="color:green">@Model.LogisticNote / 10 </h6>
+                        }
+                        @if (Model.LogisticNote < 8)
+                        {
+                            <h6 class="pt-2 pb-2" style="color:orange">@Model.LogisticNote / 10 </h6>
+                        }
+                        @if (Model.LogisticNote < 6)
+                        {
+                            <h6 class="pt-2 pb-2" style="color:red">@Model.LogisticNote / 10 </h6>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="card m-2">
+                <div class="card-header align-items-center" style="background-color:aliceblue">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="pt-2 pb-2" style="color:darkblue">Purchase Orders </h5>
+                        </div>
+                        <div>
+                            <a class="btn" style="background-color:darkblue; color:aliceblue" asp-controller="PurchaseOrder" asp-action="NewOrder" asp-route-Id="@Model.Id" >New Order</a>
+                        </div>
+                    </div>
+                </div>
+                    <div class="card-body text-justify">
+                        @foreach (PurchaseOrder po in Model.PurchaseOrders)
+                        {
+                            <div>
+                                <table class="table table-hover">
+                                    <thead style="background-color:darkblue; color:aliceblue; text-align:center">
+                                        <tr>
+                                            <th scope="col">Order Ref.</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Lines</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">@po.Id</th>
+                                            <td>@po.CreationDate</td>
+                                            <td><a class="btn" data-toggle="modal" data-target="#order" style="background-color:darkblue; color:aliceblue">Details</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <div class="modal fade bd-example-modal-lg pre-scrollable" id="order" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="p-2">
+                                                <h5 class="pt-2 pb-2" style="color:darkblue; text-align:right"> Purchase Order #@po.Id </h5>
+                                                <table class="table table-hover">
+                                                    <thead style="background-color:darkblue; color:aliceblue; text-align:center">
+                                                        <tr>
+                                                            <th scope="col">Item Ref.</th>
+                                                            <th scope="col">Item Name</th>
+                                                            <th scope="col">Quantity</th>
+                                                            <th scope="col">Unit Price</th>
+                                                            <th scope="col">Discount</th>
+                                                            <th scope="col">Delivery Date</th>
+                                                            <th scope="col">Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (OrderLine line in po.OrderLines)
+                                                        {
+                                                            <tr style="color:darkblue;">
+                                                                <th scope="row">@line.ItemReference</th>
+                                                                <td>@line.ItemName</td>
+                                                                <td>@line.Quantity</td>
+                                                                <td>@line.UnitPrice</td>
+                                                                <td>@line.Remise</td>
+                                                                <td>@line.DeliveryDate</td>
+                                                                <td>@line.Amount €</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+             
