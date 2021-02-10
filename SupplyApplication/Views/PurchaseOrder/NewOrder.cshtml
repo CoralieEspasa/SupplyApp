@@ -12,14 +12,14 @@
         </div>
         <form>
             <div class="form-group m-2">
-                <label for="exampleFormControlSelect2"><h5>Supplier Item</h5></label>
-                <select class="form-control p-2" id="SupplierItem">
+                <label for="exampleFormControlSelect2">Supplier Item</label>
+                <select name="item"class="form-control p-2" id="SupplierItem">
                     @foreach (Item i in Model.Items)
                     {
-                        <option>@i.Id - @i.ItemName - @i.UnitPrice € - LT : @i.DeliveryTime days</option>
+                        <option value="@i.Id">@i.Id - @i.ItemName - @i.UnitPrice € - LT : @i.DeliveryTime days</option>
                     }
                 </select>
-                <button type="submit" class="btn m-2" style="background-color:darkblue; color:aliceblue">Search</button>
+                <button type="select" class="btn m-2" style="background-color:darkblue; color:aliceblue">Add</button>
             </div>
         </form>
         <form asp-controller="PurchaseOrder" method="post" asp-action="add">

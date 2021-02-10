@@ -26,45 +26,44 @@ namespace SupplyApplication.Controllers
         }
 
         [HttpPost, ActionName("add")]
-        public IActionResult NewOrder(Int32 Id, OrderLine userEntry)
+        public async Task<IActionResult> NewOrder(Int32 supplierId,
+                                                  PurchaseOrder order,
+                                                  [FromBody]OrderLine userEntry)
         {
-            return View(CreatePurchaseOrder(Id, userEntry));
+            order = CreateSupplierOrder(userEntry);
+            GetSupplier(supplierId).PurchaseOrders.Add(order);
+            await _context.SaveChangesAsync();
+            return View();
         }
 
-
-        public PurchaseOrder CreatePurchaseOrder(Int32 Id,OrderLine userEntry)
+        public PurchaseOrder CreateSupplierOrder(OrderLine userEntry)
         {
-            List<OrderLine> orderLines = new List<OrderLine>();
-            OrderLine line = new OrderLine
+            PurchaseOrder order = new PurchaseOrder();
+            order.CreationDate = DateTime.Now;
+
+            IEnumerable<OrderLine> lines = new List<OrderLine>();
+            foreach(OrderLine line in lines)
             {
-                ItemReference = userEntry.Id,
-                ItemName = userEntry.ItemName,
-                Quantity = userEntry.Quantity,
-                UnitPrice = userEntry.UnitPrice,
-                Remise = userEntry.Remise,
-                DeliveryTime = userEntry.DeliveryTime,
-                DeliveryDate = DateTime.Now.AddDays(userEntry.DeliveryTime)
-            };
-
-            orderLines.Add(line);
-
-            PurchaseOrder purchaseOrder = new PurchaseOrder
-            {
-                OrderLines = orderLines,
-                CreationDate = DateTime.Now
-            };
-
-            GetSupplier(Id).PurchaseOrders.Add(purchaseOrder);
-            
-            _context.SaveChanges();
-
-            return purchaseOrder;
+                line.ItemReference = userEntry.ItemReference;
+                line.ItemName = userEntry.ItemName;
+                line.Quantity = userEntry.Quantity;
+                line.Remise = userEntry.Remise;
+                line.UnitPrice = userEntry.UnitPrice;
+                line.DeliveryTime = userEntry.DeliveryTime;
+                line.DeliveryDate = DateTime.Now.AddDays(line.DeliveryTime);
+                order.OrderLines.Add(line);
+            }
+            return order;
         }
 
         public Supplier GetSupplier(Int32 Id)
         {
-            IEnumerable<Supplier> suppliers = new List<Supplier>(_context.Suppliers.Select(s=>s).Include(s =>s.Items));
-            Supplier supplier = suppliers.Where(s => s.Id == Id).FirstOrDefault();
+            IEnumerable<Supplier> suppliers = new List<Supplier>(_context.Suppliers.Select(s=>s)
+                                                                                   .Include(s =>s.Items)
+                                                                                   .Include(s=>s.PurchaseOrders));
+            Supplier supplier = suppliers.Where(s => s.Id == Id)
+                                         .FirstOrDefault();
+
             return supplier;
         }
     }
