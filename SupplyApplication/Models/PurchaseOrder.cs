@@ -10,7 +10,7 @@ namespace SupplyApplication.Models
         public DateTime CreationDate { get; set; }
 
         public Int32 SupplierId { get; set; }
-        public virtual ICollection<OrderLine> OrderLines { get; set; }
+        public virtual ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
     }
 
 }

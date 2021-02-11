@@ -17,7 +17,7 @@ namespace SupplyApplication.Models
         public Double QualityNote { get; set; }
         public Double LogisticNote { get; set; }
         public Int32 CategoryId { get; set; }
-        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
         public virtual ICollection<Item> Items { get; set; }
     }
 }

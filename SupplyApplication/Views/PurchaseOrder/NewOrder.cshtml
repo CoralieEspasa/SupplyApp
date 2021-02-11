@@ -7,7 +7,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <form method="post" asp-controller="PurchaseOrder" action="NewOrder">
+        <form method="post" asp-controller="PurchaseOrder" asp-action="NewOrder" asp-route-supplierId="@Model.Id">
             <div class="form-group mt-3">
                 <label for="Quantity">ItemReference</label>
                 <input type="text" name="ItemReference" id="Id" class="form-control rounded" placeholder="">
@@ -32,8 +32,9 @@
                 <label for="DeliveryTime">Delivery Time</label>
                 <input type="text" name="DeliveryTime" id="DeliveryTime" class="form-control rounded" placeholder="">
             </div>
-
+            <input name="CreationDate" value="@DateTime.Now" type="hidden">
             <button type="submit" class="btn btn-primary">Add</button>
+
         </form>
     </div>
 </div>

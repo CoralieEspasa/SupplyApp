@@ -884,3 +884,4 @@ C:\Users\Coralie Espasa\Pro\Projects\SupplyApp\SupplyApplication\obj\Debug\net5.
 C:\Users\Coralie Espasa\Pro\Projects\SupplyApp\SupplyApplication\obj\Debug\net5.0\SupplyApplication.genruntimeconfig.cache
 C:\Users\Coralie Espasa\Pro\Projects\SupplyApp\SupplyApplication\bin\Debug\net5.0\Castle.Core.dll
 C:\Users\Coralie Espasa\Pro\Projects\SupplyApp\SupplyApplication\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Proxies.dll
+C:\Users\Coralie Espasa\Pro\Projects\SupplyApp\SupplyApplication\obj\Debug\net5.0\Razor\Views\PurchaseOrder\_NewLines.cshtml.g.cs

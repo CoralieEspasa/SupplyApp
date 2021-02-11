@@ -8,6 +8,7 @@ namespace SupplyApplication.Models
     public class OrderLine
     {
         public Int32 Id { get; set; }
+        public DateTime CreationDate { get; set; }
         public Int32 Quantity { get; set; }
         public Double Remise { get; set; }
         public Int32 ItemReference { get; set; }

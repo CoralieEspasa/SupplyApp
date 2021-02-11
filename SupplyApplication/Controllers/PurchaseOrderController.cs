@@ -26,11 +26,10 @@ namespace SupplyApplication.Controllers
         }
 
         [HttpPost, ActionName("NewOrder")]
-        public IActionResult NewOrder(Int32 supplierId,
-                                      [FromBody] OrderLine userEntry)
+        public IActionResult NewOrder([FromQuery] Int32 supplierId, [FromForm] OrderLine line)
         {
-            CreateSupplierOrder(supplierId, userEntry);
-            return View();
+            CreateSupplierOrder(supplierId);
+            return View(GetSupplierById(supplierId));
         }
 
         public Supplier GetSupplierById(Int32 supplierId)
@@ -40,31 +39,34 @@ namespace SupplyApplication.Controllers
                                          .FirstOrDefault();
             return supplier;
         }
-        public Supplier CreateSupplierOrder(Int32 supplierId, OrderLine userEntry)
+        public PurchaseOrder CreateSupplierOrder(Int32 supplierId)
         {
             Supplier supplier = GetSupplierById(supplierId);
-
             PurchaseOrder order = new PurchaseOrder();
             order.CreationDate = DateTime.Now;
             order.SupplierId = supplierId;
-
-            ICollection<OrderLine> lines = new List<OrderLine>();
-            foreach (OrderLine line in lines)
-            {
-                line.ItemReference = userEntry.ItemReference;
-                line.ItemName = userEntry.ItemName;
-                line.Quantity = userEntry.Quantity;
-                line.Remise = userEntry.Remise;
-                line.UnitPrice = userEntry.UnitPrice;
-                line.DeliveryTime = userEntry.DeliveryTime;
-                line.DeliveryDate = DateTime.Now.AddDays(line.DeliveryTime);
-                line.PurchaseOrderId = order.Id;
-            }
-
             supplier.PurchaseOrders.Add(order);
             _context.SaveChanges();
 
-            return supplier;
+            return order;
+        }
+
+        public PurchaseOrder GetOrderById(Int32 orderId)
+        {
+            IEnumerable<PurchaseOrder> orders = new List<PurchaseOrder>(_context.PurchaseOrders.Select(po => po));
+            PurchaseOrder order = orders.Where(po => po.Id == orderId)
+                                         .FirstOrDefault();
+            return order;
+        }
+        public OrderLine CreateSupplierOrderLine(Int32 orderId, OrderLine line)
+        {
+            PurchaseOrder order = GetOrderById(orderId);
+            line.DeliveryDate = DateTime.Now.AddDays(line.DeliveryTime);
+            line.PurchaseOrderId = order.Id;
+            _context.OrderLines.Add(line);
+            _context.SaveChanges();
+
+            return line;
         }
     }
 }
