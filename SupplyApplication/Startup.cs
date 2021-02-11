@@ -34,6 +34,11 @@ namespace SupplyApplication
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseLazyLoadingProxies()
+                           .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                );
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddMvc();

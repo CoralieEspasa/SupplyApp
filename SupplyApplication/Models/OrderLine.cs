@@ -15,12 +15,15 @@ namespace SupplyApplication.Models
         public Double UnitPrice { get; set; }
         public Double DeliveryTime { get; set; }
         public DateTime DeliveryDate { get; set;}
-        public Double Amount { 
-            get 
-                {
-                    return (Quantity * UnitPrice) / 1 + Remise;
-                } 
+        public Double Amount
+        {
+            get
+            {
+                return (Quantity * UnitPrice) / 1 + Remise;
+            }
         }
+        public Int32 PurchaseOrderId { get; set; }
+        
 
     }
 }

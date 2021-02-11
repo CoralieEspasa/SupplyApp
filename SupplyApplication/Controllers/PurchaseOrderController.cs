@@ -22,27 +22,34 @@ namespace SupplyApplication.Controllers
         [HttpGet]
         public IActionResult NewOrder(Int32 Id)
         {
-            return View(GetSupplier(Id));
+            return View(GetSupplierById(Id));
         }
 
-        [HttpPost, ActionName("add")]
-        public async Task<IActionResult> NewOrder(Int32 supplierId,
-                                                  PurchaseOrder order,
-                                                  [FromBody]OrderLine userEntry)
+        [HttpPost, ActionName("NewOrder")]
+        public IActionResult NewOrder(Int32 supplierId,
+                                      [FromBody] OrderLine userEntry)
         {
-            order = CreateSupplierOrder(userEntry);
-            GetSupplier(supplierId).PurchaseOrders.Add(order);
-            await _context.SaveChangesAsync();
+            CreateSupplierOrder(supplierId, userEntry);
             return View();
         }
 
-        public PurchaseOrder CreateSupplierOrder(OrderLine userEntry)
+        public Supplier GetSupplierById(Int32 supplierId)
         {
+            IEnumerable<Supplier> suppliers = new List<Supplier>(_context.Suppliers.Select(s => s));
+            Supplier supplier = suppliers.Where(s => s.Id == supplierId)
+                                         .FirstOrDefault();
+            return supplier;
+        }
+        public Supplier CreateSupplierOrder(Int32 supplierId, OrderLine userEntry)
+        {
+            Supplier supplier = GetSupplierById(supplierId);
+
             PurchaseOrder order = new PurchaseOrder();
             order.CreationDate = DateTime.Now;
+            order.SupplierId = supplierId;
 
-            IEnumerable<OrderLine> lines = new List<OrderLine>();
-            foreach(OrderLine line in lines)
+            ICollection<OrderLine> lines = new List<OrderLine>();
+            foreach (OrderLine line in lines)
             {
                 line.ItemReference = userEntry.ItemReference;
                 line.ItemName = userEntry.ItemName;
@@ -51,18 +58,11 @@ namespace SupplyApplication.Controllers
                 line.UnitPrice = userEntry.UnitPrice;
                 line.DeliveryTime = userEntry.DeliveryTime;
                 line.DeliveryDate = DateTime.Now.AddDays(line.DeliveryTime);
-                order.OrderLines.Add(line);
+                line.PurchaseOrderId = order.Id;
             }
-            return order;
-        }
 
-        public Supplier GetSupplier(Int32 Id)
-        {
-            IEnumerable<Supplier> suppliers = new List<Supplier>(_context.Suppliers.Select(s=>s)
-                                                                                   .Include(s =>s.Items)
-                                                                                   .Include(s=>s.PurchaseOrders));
-            Supplier supplier = suppliers.Where(s => s.Id == Id)
-                                         .FirstOrDefault();
+            supplier.PurchaseOrders.Add(order);
+            _context.SaveChanges();
 
             return supplier;
         }
