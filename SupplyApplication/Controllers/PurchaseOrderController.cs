@@ -20,16 +20,17 @@ namespace SupplyApplication.Controllers
         }
 
         [HttpGet]
-        public IActionResult NewOrder(Int32 Id)
+        public IActionResult Index([FromQuery]Int32 Id)
         {
             return View(GetSupplierById(Id));
         }
 
+
         [HttpPost, ActionName("NewOrder")]
-        public IActionResult NewOrder(Int32 supplierId,
-                                      [FromBody] OrderLine userEntry)
+        public IActionResult NewOrder(PurchaseOrder order)
         {
-            CreateSupplierOrder(supplierId, userEntry);
+            _context.PurchaseOrders.Add(order);
+            _context.SaveChanges();
             return View();
         }
 
@@ -40,7 +41,7 @@ namespace SupplyApplication.Controllers
                                          .FirstOrDefault();
             return supplier;
         }
-        public Supplier CreateSupplierOrder(Int32 supplierId, OrderLine userEntry)
+       /* public Supplier CreateSupplierOrder(Int32 supplierId, OrderLine userEntry)
         {
             Supplier supplier = GetSupplierById(supplierId);
 
@@ -65,6 +66,6 @@ namespace SupplyApplication.Controllers
             _context.SaveChanges();
 
             return supplier;
-        }
+        }*/
     }
 }
