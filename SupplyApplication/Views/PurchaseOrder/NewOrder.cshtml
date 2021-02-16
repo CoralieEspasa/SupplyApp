@@ -7,22 +7,15 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="m-2">
-
-        </div>
-        <form>
-            <div class="form-group m-2">
-                <label for="exampleFormControlSelect2"><h5>Supplier Item</h5></label>
-                <select class="form-control p-2" id="SupplierItem">
-                    @foreach (Item i in Model.Items)
-                    {
-                        <option>@i.Id - @i.ItemName - @i.UnitPrice € - LT : @i.DeliveryTime days</option>
-                    }
-                </select>
-                <button type="submit" class="btn m-2" style="background-color:darkblue; color:aliceblue">Search</button>
+        <form method="post" asp-controller="PurchaseOrder" asp-action="NewOrder" asp-route-supplierId="@Model.Id">
+            <div class="form-group mt-3">
+                <label for="Quantity">ItemReference</label>
+                <input type="text" name="ItemReference" id="Id" class="form-control rounded" placeholder="">
             </div>
-        </form>
-        <form asp-controller="PurchaseOrder" method="post" asp-action="add">
+            <div class="form-group mt-3">
+                <label for="Quantity">ItemName</label>
+                <input type="text" name="ItemName" id="Id" class="form-control rounded" placeholder="">
+            </div>
             <div class="form-group mt-3">
                 <label for="Quantity">Quantity</label>
                 <input type="text" name="Quantity" id="Id" class="form-control rounded" placeholder="">
@@ -39,11 +32,9 @@
                 <label for="DeliveryTime">Delivery Time</label>
                 <input type="text" name="DeliveryTime" id="DeliveryTime" class="form-control rounded" placeholder="">
             </div>
-            <div class="form-group mt-3">
-                <label for="DeliveryDate">Delivery Date</label>
-                <input type="text" name="DeliveryDate" id="DeliveryDate" class="form-control rounded" placeholder="">
-            </div>
+            <input name="CreationDate" value="@DateTime.Now" type="hidden">
             <button type="submit" class="btn btn-primary">Add</button>
+
         </form>
     </div>
 </div>
